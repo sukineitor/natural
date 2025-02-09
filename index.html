@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Descarga tu Libro de Belleza Natural</title>
+    <style>
+        :root {
+            --primary-color: #87A878;
+            --button-color: #F7CAC9;
+            --button-hover: #F5B7B1;
+            --text-color: #4A4A4A;
+            --background-start: #FFF5E1;
+            --background-end: #F5E6D3;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, var(--background-start), var(--background-end));
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            font-size: 16px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 1em;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .button-container {
+            position: relative;
+            flex-grow: 1;
+            width: 100%;
+            overflow: hidden;
+            min-height: 300px;
+        }
+
+        .download-button {
+            position: absolute;
+            background-color: var(--button-color);
+            color: var(--text-color);
+            border: none;
+            padding: 10px 15px;
+            font-size: 0.9em;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 25px;
+            transition: background-color 0.3s ease, opacity 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            white-space: nowrap;
+            z-index: 10;
+        }
+
+        .download-button:hover, .download-button:focus {
+            background-color: var(--button-hover);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        #message {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            background-color: var(--button-color);
+            border-radius: 5px;
+            display: none;
+            z-index: 1000;
+            font-size: 0.9em;
+            max-width: 90%;
+        }
+
+        .emoji {
+            font-size: 1.2em;
+        }
+
+        @media (min-width: 768px) {
+            body {
+                font-size: 18px;
+            }
+
+            h1 {
+                font-size: 2.5em;
+            }
+
+            .download-button {
+                padding: 15px 25px;
+                font-size: 1em;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            body {
+                font-size: 20px;
+            }
+
+            .button-container {
+                min-height: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Descubre la Belleza Natural</h1>
+        <p>
+            <span class="emoji">🎯</span> ¡Encuentra el botón secreto y gana tu libro! <span class="emoji">📖✨</span><br><br>
+            En este sitio web hay varios botones, cada uno te lleva a un destino diferente... pero solo uno de ellos te permitirá descargar el libro. Cada vez que presionas un botón incorrecto, este desaparecerá, acercándote más a la respuesta correcta.<br><br>
+            ¿Podrás encontrar el botón correcto? <span class="emoji">🤔🔍</span><br><br>
+            ¡Empieza ahora y prueba tu suerte! <span class="emoji">🎉</span>
+        </p>
+    </div>
+    <div class="button-container" id="buttonContainer"></div>
+    <div id="message"></div>
+
+    <script>
+        const buttonContainer = document.getElementById('buttonContainer');
+        const messageDiv = document.getElementById('message');
+        const buttonTexts = [
+            "Descargar ahora", "Obtener libro", "Consigue tu copia",
+            "Descarga gratis", "Accede ya", "Libro digital"
+        ];
+        const numButtons = 10;
+        let buttons = [];
+
+        // URL del PDF a descargar
+        const pdfUrl = 'https://drive.google.com/file/d/1oMUK4qsYHpsNiU3XgljHrpq3rnGKGZkY/view?usp=drive_link';
+
+        // URLs para redirección en caso de botones incorrectos
+        const redirectUrls = [
+            'https://acortar.link/Jvf45w',
+            'https://acortar.link/Jvf45w',
+            'https://acortar.link/Jvf45w',
+            'https://acortar.link/Jvf45w',
+            'https://acortar.link/Jvf45w'
+        ];
+
+        function createButtons() {
+            for (let i = 0; i < numButtons; i++) {
+                const button = document.createElement('button');
+                button.className = 'download-button';
+                button.textContent = buttonTexts[i % buttonTexts.length];
+                button.style.transition = 'none';
+                positionButton(button);
+                button.addEventListener('click', handleButtonClick);
+                buttonContainer.appendChild(button);
+                buttons.push({
+                    element: button,
+                    dx: (Math.random() - 0.5) * 2,
+                    dy: (Math.random() - 0.5) * 2
+                });
+            }
+        }
+
+        function positionButton(button) {
+            const containerRect = buttonContainer.getBoundingClientRect();
+            const buttonRect = button.getBoundingClientRect();
+            
+            const x = Math.random() * (containerRect.width - buttonRect.width);
+            const y = Math.random() * (containerRect.height - buttonRect.height);
+            
+            button.style.left = `${x}px`;
+            button.style.top = `${y}px`;
+        }
+
+        function moveButtons() {
+            const containerRect = buttonContainer.getBoundingClientRect();
+
+            buttons.forEach(button => {
+                if (button.element.parentNode) {
+                    const buttonRect = button.element.getBoundingClientRect();
+                    let x = buttonRect.left - containerRect.left + button.dx;
+                    let y = buttonRect.top - containerRect.top + button.dy;
+
+                    if (x <= 0 || x + buttonRect.width >= containerRect.width) {
+                        button.dx *= -1;
+                    }
+                    if (y <= 0 || y + buttonRect.height >= containerRect.height) {
+                        button.dy *= -1;
+                    }
+
+                    x = Math.max(0, Math.min(x, containerRect.width - buttonRect.width));
+                    y = Math.max(0, Math.min(y, containerRect.height - buttonRect.height));
+
+                    button.element.style.left = `${x}px`;
+                    button.element.style.top = `${y}px`;
+                }
+            });
+
+            requestAnimationFrame(moveButtons);
+        }
+
+        function handleButtonClick(event) {
+            const isRealButton = Math.random() < 0.1; // 10% chance of being the real button
+            if (isRealButton) {
+                messageDiv.textContent = "¡Felicidades! Has encontrado el botón correcto. Descargando el libro...";
+                messageDiv.style.backgroundColor = "var(--primary-color)";
+                messageDiv.style.display = 'block';
+                
+                // Iniciar la descarga del PDF
+                window.open(pdfUrl, '_blank');
+            } else {
+                const redirectUrl = redirectUrls[Math.floor(Math.random() * redirectUrls.length)];
+                window.open(redirectUrl, '_blank');
+                
+                // Eliminar el botón
+                event.target.style.opacity = '0';
+                setTimeout(() => {
+                    event.target.remove();
+                    buttons = buttons.filter(b => b.element !== event.target);
+                }, 300);
+            }
+
+            if (buttons.length === 1) {
+                messageDiv.textContent = "¡Este es el último botón! Debe ser el correcto.";
+                messageDiv.style.backgroundColor = "var(--primary-color)";
+                messageDiv.style.display = 'block';
+            }
+        }
+
+        function adjustButtonContainer() {
+            const containerHeight = window.innerHeight - buttonContainer.offsetTop;
+            buttonContainer.style.height = `${Math.max(300, containerHeight)}px`;
+        }
+
+        window.addEventListener('resize', adjustButtonContainer);
+        createButtons();
+        adjustButtonContainer();
+        requestAnimationFrame(moveButtons);
+    </script>
+</body>
+</html>
